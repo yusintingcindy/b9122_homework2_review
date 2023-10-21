@@ -27,8 +27,6 @@ while len(pr_list) < max_pr:
 
         try:
             curr_url = urls.pop(0)
-            print("num. of URLs in stack: %d " % len(urls))
-            print("Trying to access= " + curr_url)
             response = requests.get(curr_url, headers={'User-Agent': 'Mozilla/5.0'})
             webpage = response.content
             opened.append(curr_url)
@@ -39,7 +37,6 @@ while len(pr_list) < max_pr:
         soup = BeautifulSoup(webpage)
         check_plenary = soup.find("span", {"class": "ep_name"}, text="Plenary session")
         if check_plenary is not None:
-            print("found plenary related press release")
             heading = soup.find("h1")
             date = soup.find(class_="ep-p_text ep-layout_date")
             bullets = soup.find(class_="ep-a_facts")
@@ -57,8 +54,7 @@ while len(pr_list) < max_pr:
             if content is not None:
                 pr['Content'] = content.text
             if any("crisis".lower() in value.lower() for value in pr.values()):
-                print("found press release with crisis")
-                pr_list.append(pr)
+                pr_list.append(curr_url)
 
     elif (len(urls) == 0) and (main_soup.find(id="continuesLoading_button") is not None):
 
